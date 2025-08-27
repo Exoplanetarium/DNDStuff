@@ -24,12 +24,18 @@ public class PugSaver {
 
 	// Moves every dog whose breed is "Golden" in the list to the back of the list
 	public static void rescuePugs(ArrayList<Dog> list) {
-		for (int i = 0; i < list.size(); i++) {
+		int size = list.size();
+		for (int i = 0; i < size; i++) {
 			if (list.get(i).getBreed().contains("Gold")) {
-				Dog temp = list.get(i);
-				list.remove(i);
-				list.add(list.size(), temp);
-				i--;
+				for (int j = size - 1; j >= 0; j--) {
+					if (!list.get(j).getBreed().contains("Gold")) {
+						Dog temp = list.get(j);
+						list.set(j, list.get(i));
+						list.set(i, temp);
+						size--;
+						break;
+					}
+				}
 			}
 		}
 	}
