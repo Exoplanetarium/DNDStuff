@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Objects;
-
 public class PugSaver {
 	public static void main(String[] args) {
 		Dog dog1 = new Dog("Bob1", "Gold Retrrgnaogin");
@@ -10,7 +7,7 @@ public class PugSaver {
 		Dog dog3 = new Dog("Bob3", "Goldie Aoerbgioaergaeg");
 		Dog dog4 = new Dog("Bob4", "Pug");
 		Dog dog5 = new Dog("Bob5", "Pug");
-		ArrayList<Dog> list = new ArrayList<>();
+		MyArrayList<Dog> list = new MyArrayList<>();
 		list.add(dog1);
 		list.add(dog2);
 		list.add(dog4);
@@ -23,14 +20,13 @@ public class PugSaver {
 	}
 
 	// Moves every dog whose breed is "Golden" in the list to the back of the list
-	public static void rescuePugs(ArrayList<Dog> list) {
+	public static void rescuePugs(MyArrayList<Dog> list) {
 		int size = list.size();
 		for (int i = 0; i < size; i++) {
 			if (list.get(i).getBreed().contains("Gold")) {
 				for (int j = size - 1; j >= 0; j--) {
 					if (!list.get(j).getBreed().contains("Gold")) {
-						Dog temp = list.get(j);
-						list.set(j, list.get(i));
+						Dog temp = list.set(j, list.get(i));
 						list.set(i, temp);
 						size--;
 						break;
