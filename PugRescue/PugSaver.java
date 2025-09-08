@@ -1,31 +1,36 @@
+import java.util.ArrayList;
+
 public class PugSaver {
 	public static void main(String[] args) {
-		Dog dog1 = new Dog("Bob1", "Gold Retrrgnaogin");
-		Dog dog2 = new Dog("Bob2", "Golden Boaiergeg");
-		Dog dog6 = new Dog("Bob6", "Pug");
-		Dog dog7 = new Dog("Bob7", "Pug");
-		Dog dog3 = new Dog("Bob3", "Goldie Aoerbgioaergaeg");
-		Dog dog4 = new Dog("Bob4", "Pug");
-		Dog dog5 = new Dog("Bob5", "Pug");
-		MyArrayList<Dog> list = new MyArrayList<>();
-		list.add(dog1);
-		list.add(dog2);
-		list.add(dog4);
-		list.add(dog3);
-		list.add(dog5);
-		list.add(dog6);
-		list.add(dog7);
+		ArrayList<Dog> list = new ArrayList<>();
+		list.add(new Dog("Lady", "Golden"));
+		list.add(new Dog("Paco", "Mutt"));
+		list.add(new Dog("Fifi", "Mutt"));
+		list.add(new Dog("Hector", new String("Gol"+"den")));
+		list.add(new Dog("Luna", "Golden"));
+		list.add(new Dog("Rosie", "Labradoodle"));
+		list.add(new Dog("Liberty", "German Shepherd"));
+		list.add(new Dog("Monchy", "Golden"));
 		rescuePugs(list);
 		System.out.println(list.toString());
 	}
 
 	// Moves every dog whose breed is "Golden" in the list to the back of the list
-	public static void rescuePugs(MyArrayList<Dog> list) {
+	public static void rescuePugs(ArrayList<Dog> list) {
 		int size = list.size();
-		for (int i = 0; i < size; i++) {
+		for (int i = list.size() - size; i < size; i++) {
 			if (list.get(i).getBreed().contains("Gold")) {
-				for (int j = size - 1; j >= 0; j--) {
+				for (int j = size - 1; j >= list.size() - size; j--) {
+					if (i == j) {
+						break;
+					}
+					
 					if (!list.get(j).getBreed().contains("Gold")) {
+						if (i + j > list.size()) {
+							size--;
+							break;
+						}
+
 						Dog temp = list.set(j, list.get(i));
 						list.set(i, temp);
 						size--;
