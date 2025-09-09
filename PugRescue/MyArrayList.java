@@ -172,19 +172,20 @@ public class MyArrayList<E> {
 	// should be O(n)
 	public String toString() {
 		/* ---- YOUR CODE HERE ---- */
-        String arr = "[";
+		StringBuilder arr = new StringBuilder("[");
         for (int i = 0; i < size() - 1; i++) {
 			if (internalArray[i] == null) {
-				arr += "null, ";
+				arr.append("null, ");
 				continue;
 			}
 			
-            arr += internalArray[i].toString();
-            arr += ", ";
+            arr.append(internalArray[i].toString());
+            arr.append(", ");
         }
 
-        arr += internalArray[size() - 1].toString() + "]";
-        return arr;
+        arr.append(internalArray[size() - 1].toString());
+		arr.append("]");
+        return arr.toString();
 	}
 
 }
