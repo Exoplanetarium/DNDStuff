@@ -9,7 +9,7 @@ public class SinglyLinkedList<E> {
 		Integer[] arr = new Integer[]{1, 2, 3};
 		SinglyLinkedList<Integer> test = new SinglyLinkedList<Integer>(arr);
 		System.out.println(test.toString());
-		Integer hell = null;
+		Integer hell = 6;
 		test.add(hell);
 		System.out.println(test.toString());
 	}
@@ -27,7 +27,7 @@ public class SinglyLinkedList<E> {
 	public SinglyLinkedList(Object[] values) {
 		head = new ListNode<E>((E) values[0], tail);
 		tail = head;
-		for (int i = 1; i < values.length; i++) {
+		for (int i = 0; i < values.length; i++) {
 			add((E) values[i]);
 			nodeCount++;
 		}
@@ -45,7 +45,7 @@ public class SinglyLinkedList<E> {
 	public boolean isEmpty() {
 		ListNode<E> next = head;
 		for (int i = 0; i < nodeCount; i++) {
-			if (!next.equals(null)) {
+			if (next.getValue() != null) {
 				return false;
 			}
 
@@ -84,7 +84,7 @@ public class SinglyLinkedList<E> {
 		int idx = 0;
 		ListNode<E> next = head;
 		while (!next.equals(tail)) {
-			if (next.equals(obj)) {
+			if (next.getValue().equals(obj)) {
 				return idx;
 			}
 
@@ -168,16 +168,24 @@ public class SinglyLinkedList<E> {
 
 		if (i == 0) {
 			head = new ListNode<E>((E) obj, head);
+			return;
+		} else if (i == nodeCount - 1) {
+			ListNode<E> newTail = new ListNode<E>((E) obj);
+			tail.setNext(newTail);
+			tail = newTail;
+			return;
 		}
 
-		ListNode<E> next = head;
+		ListNode<E> prev = head;
 		for (int _i = 0; _i < i - 1; _i++) {
-			next = next.getNext();
+			prev = prev.getNext();
 		}
 
-		ListNode<E> added = new ListNode<E>((E) obj, next.getNext().getNext());
+		ListNode<E> newNode = new ListNode<E>((E) obj);
+		ListNode<E> next = prev.getNext();
+		newNode.setNext(next);
+		prev.setNext(newNode);	
 		nodeCount++;
-		next.setNext(added);
 	}
 
 	// Removes the i-th element and returns its value.
@@ -222,7 +230,7 @@ public class SinglyLinkedList<E> {
 		ListNode<E> next = head;
 		while (!next.equals(tail)) {	
 			next = next.getNext();
-			if (next == null) {
+			if (next.getValue() == null) {
 				str.append(", null");
 			} else {
 				str.append(", ");
