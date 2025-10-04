@@ -6,11 +6,13 @@ public class SinglyLinkedList<E> {
 	private int nodeCount;
 
 	public static void main(String[] args) {
-		Integer[] arr = new Integer[]{1, 2, 3};
-		SinglyLinkedList<Integer> test = new SinglyLinkedList<Integer>(arr);
+		String[] arr = new String[] { };
+		SinglyLinkedList<String> test = new SinglyLinkedList<String>(arr);
 		System.out.println(test.toString());
-		Integer hell = 6;
-		test.add(hell);
+
+		String hell = "a";
+		System.out.println(test.add(hell));
+		System.out.println(test.nodeCount);
 		System.out.println(test.toString());
 	}
 
@@ -25,31 +27,37 @@ public class SinglyLinkedList<E> {
 	// all elements from the array values, in the same order
 	@SuppressWarnings("unchecked")
 	public SinglyLinkedList(Object[] values) {
+		if (values.length == 0) {
+			this.head = null;
+			this.tail = null;
+			this.nodeCount = 0;
+			return;
+		}
+
 		head = new ListNode<E>((E) values[0], tail);
 		tail = head;
 		for (int i = 0; i < values.length; i++) {
 			add((E) values[i]);
-			nodeCount++;
 		}
 	}
-	
+
 	public ListNode<E> getHead() {
 		return head;
 	}
-	
+
 	public ListNode<E> getTail() {
 		return tail;
 	}
 
 	// Returns true if this list is empty; otherwise returns false.
 	public boolean isEmpty() {
-		ListNode<E> next = head;
+		ListNode<E> node = head;
 		for (int i = 0; i < nodeCount; i++) {
-			if (next.getValue() != null) {
+			if (node.getValue() != null) {
 				return false;
 			}
 
-			next = next.getNext();
+			node = node.getNext();
 		}
 
 		return true;
@@ -64,15 +72,21 @@ public class SinglyLinkedList<E> {
 	// otherwise returns false.
 	public boolean contains(E obj) {
 		ListNode<E> next = head;
-		while (!next.equals(tail)) {
-			if (next.equals(obj)) {
+		for (int i = 0; i < nodeCount; i++) {
+			if (next.getValue() == null) {
+				if (obj == null) {
+					return true;
+				} else {
+					next = next.getNext();
+					continue;
+				}
+			} 
+
+			if (next.getValue().equals(obj)) {
 				return true;
 			}
-			next = next.getNext();
-		}
 
-		if (tail.equals(obj)) {
-			return true;
+			next = next.getNext();
 		}
 
 		return false;
@@ -81,25 +95,28 @@ public class SinglyLinkedList<E> {
 	// Returns the index of the first element in equal to obj;
 	// if not found, returns -1.
 	public int indexOf(E obj) {
-		int idx = 0;
 		ListNode<E> next = head;
-		while (!next.equals(tail)) {
+		for (int i = 0; i < nodeCount; i++) {
+			if (next.getValue() == null) {
+				if (obj == null) {
+					return i;
+				} else {
+					next = next.getNext();
+					continue;
+				}
+			} 
+
 			if (next.getValue().equals(obj)) {
-				return idx;
+				return i;
 			}
-
-			idx++;
+			
 			next = next.getNext();
-		}
-
-		if (tail.equals(obj)) {
-			return idx;
 		}
 
 		return -1;
 	}
 
-	// Adds obj to this collection.  Returns true if successful;
+	// Adds obj to this collection. Returns true if successful;
 	// otherwise returns false.
 	public boolean add(E obj) {
 		ListNode<E> next = new ListNode<E>(obj);
@@ -126,9 +143,9 @@ public class SinglyLinkedList<E> {
 		return true;
 	}
 
-	// Returns the i-th element.               
+	// Returns the i-th element.
 	public E get(int i) {
-		if (i < 0 || i > nodeCount) {
+		if (i < 0 || i >= nodeCount) {
 			throw new IndexOutOfBoundsException();
 		}
 		ListNode<E> next = head;
@@ -146,11 +163,25 @@ public class SinglyLinkedList<E> {
 			throw new IndexOutOfBoundsException();
 		}
 
+		if (i == 0) {
+			E temp = head.getValue();
+			head = new ListNode<E>((E) obj, head.getNext());
+			return temp;
+		} 
+
 		ListNode<E> next = head;
 		for (int _i = 0; _i < i - 1; _i++) {
 			next = next.getNext();
 		}
-		
+
+		if (i == nodeCount - 1) {
+			ListNode<E> newNode = new ListNode<E>((E) obj, null);
+			next.setNext(newNode);
+			E temp = tail.getValue();
+			tail = newNode;
+			return temp;
+		}
+
 		E temp = next.getNext().getValue();
 		ListNode<E> newNode = new ListNode<E>((E) obj, next.getNext().getNext());
 		next.setNext(newNode);
@@ -160,19 +191,21 @@ public class SinglyLinkedList<E> {
 
 	// Inserts obj to become the i-th element. Increments the size
 	// of the list by one.
-	@SuppressWarnings({ "unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	public void add(int i, Object obj) {
-		if (i < 0 || i >= nodeCount) {
+		if (i < 0 || i > nodeCount) {
 			throw new IndexOutOfBoundsException();
 		}
 
 		if (i == 0) {
 			head = new ListNode<E>((E) obj, head);
+			nodeCount++;
 			return;
-		} else if (i == nodeCount - 1) {
+		} else if (i == nodeCount) {
 			ListNode<E> newTail = new ListNode<E>((E) obj);
 			tail.setNext(newTail);
 			tail = newTail;
+			nodeCount++;
 			return;
 		}
 
@@ -184,20 +217,21 @@ public class SinglyLinkedList<E> {
 		ListNode<E> newNode = new ListNode<E>((E) obj);
 		ListNode<E> next = prev.getNext();
 		newNode.setNext(next);
-		prev.setNext(newNode);	
+		prev.setNext(newNode);
 		nodeCount++;
 	}
 
 	// Removes the i-th element and returns its value.
 	// Decrements the size of the list by one.
 	public E remove(int i) {
-		if (i < 0 || i > nodeCount) {
+		if (i < 0 || i >= nodeCount) {
 			throw new IndexOutOfBoundsException();
 		}
 
 		if (i == 0) {
 			E removed = head.getValue();
 			head = head.getNext();
+			nodeCount--;
 			return removed;
 		}
 
@@ -209,6 +243,7 @@ public class SinglyLinkedList<E> {
 		if (next.getNext().equals(tail)) {
 			E removed = tail.getValue();
 			tail = next;
+			nodeCount--;
 			return removed;
 		}
 
@@ -218,26 +253,31 @@ public class SinglyLinkedList<E> {
 		return removed;
 	}
 
-	// Returns a string representation of this list exactly like that for MyArrayList.
+	// Returns a string representation of this list exactly like that for
+	// MyArrayList.
 	public String toString() {
+		if (nodeCount == 0) {
+			return "[]";
+		}
+		
 		StringBuilder str = new StringBuilder("[");
-		if (head == null) {
+		if (head.getValue() == null) {
 			str.append("null");
 		} else {
 			str.append(head.getValue().toString());
 		}
 
 		ListNode<E> next = head;
-		while (!next.equals(tail)) {	
+		while (!next.equals(tail)) {
 			next = next.getNext();
 			if (next.getValue() == null) {
 				str.append(", null");
 			} else {
 				str.append(", ");
 				str.append(next.getValue().toString());
-			}			
+			}
 		}
-		
+
 		str.append("]");
 		return str.toString();
 	}
