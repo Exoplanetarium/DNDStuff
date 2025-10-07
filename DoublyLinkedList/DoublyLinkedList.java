@@ -401,16 +401,30 @@ public class DoublyLinkedList {
 	// Like question 11 on the SinglyLinkedList test:
 	// Replaces every node containing "A" with three nodes containing "T" "A" "C"
 	public void replaceEveryAWithTAC() {
+		ListNode2<Nucleotide> node = SENTINEL.getNext();
 		for (int i = 0; i < nodeCount; i++) {
-			if (get(i) == null) {
+			if (node.getValue() == null) {
 				continue;
 			}
 
-			if (get(i).equals(Nucleotide.A)) {
-				add(i, Nucleotide.T);
-				add(i + 2, Nucleotide.C);
+			if (node.getValue().equals(Nucleotide.A)) {
+				ListNode2<Nucleotide> T = new ListNode2<Nucleotide>(Nucleotide.T);
+				ListNode2<Nucleotide> C = new ListNode2<Nucleotide>(Nucleotide.C);
+
+				T.setNext(node);
+				C.setPrevious(node);
+
+				ListNode2<Nucleotide> prev = node.getPrevious();
+				ListNode2<Nucleotide> next = node.getNext();
+
+				prev.setNext(T);
+				next.setPrevious(C);
+
+				node = node.getNext();
 				i++;
 			}
+
+			node = node.getNext();
 		}
 	}
 

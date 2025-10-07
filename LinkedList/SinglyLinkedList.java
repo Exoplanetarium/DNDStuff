@@ -10,8 +10,44 @@ public class SinglyLinkedList<E> {
 		SinglyLinkedList<String> test = new SinglyLinkedList<String>(arr);
 		System.out.println(test.toString());
 
-		String hell = "a";
-		System.out.println(test.add(hell));
+		String hell = null;
+		System.out.println(test.nodeCount);
+
+		test.add("a");
+		System.out.println(test.getHead().getValue());
+
+
+		test.add("a");
+		test.add("a");
+		test.add("a");
+
+		test.add("b");
+		test.add("b");
+		test.add("b");
+		test.add("b");
+
+		test.add(null);
+		test.add(null);
+		test.add(null);
+		test.add("c");
+		System.out.println(test.nodeCount);
+		System.out.println(test.toString());		
+
+		test.remove(null);
+		test.remove(null);
+		test.remove(null);
+		test.remove(null);
+		test.remove("c");
+
+		test.remove(0);
+		test.remove(1);
+		test.remove(0);
+		test.remove(1);
+
+		System.out.println(test.indexOf("d"));
+		System.out.println(test.indexOf(null));
+		System.out.println(test.contains("a"));
+		System.out.println(test.contains(null));
 		System.out.println(test.nodeCount);
 		System.out.println(test.toString());
 	}
@@ -80,7 +116,7 @@ public class SinglyLinkedList<E> {
 				} else {
 					return true;
 				}
-			} 
+			}
 
 			if (next.getValue().equals(obj)) {
 				return true;
@@ -109,7 +145,7 @@ public class SinglyLinkedList<E> {
 			if (next.getValue().equals(obj)) {
 				return i;
 			}
-			
+
 			next = next.getNext();
 		}
 
@@ -167,7 +203,7 @@ public class SinglyLinkedList<E> {
 			E temp = head.getValue();
 			head = new ListNode<E>((E) obj, head.getNext());
 			return temp;
-		} 
+		}
 
 		ListNode<E> next = head;
 		for (int _i = 0; _i < i - 1; _i++) {
@@ -259,7 +295,7 @@ public class SinglyLinkedList<E> {
 		if (nodeCount == 0) {
 			return "[]";
 		}
-		
+
 		StringBuilder str = new StringBuilder("[");
 		if (head.getValue() == null) {
 			str.append("null");
