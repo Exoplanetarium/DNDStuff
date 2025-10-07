@@ -73,12 +73,12 @@ public class SinglyLinkedList<E> {
 	public boolean contains(E obj) {
 		ListNode<E> next = head;
 		for (int i = 0; i < nodeCount; i++) {
-			if (next.getValue() == null) {
-				if (obj == null) {
-					return true;
-				} else {
+			if (next.getValue() == null || obj == null) {
+				if (obj != null || next.getValue() != null) {
 					next = next.getNext();
 					continue;
+				} else {
+					return true;
 				}
 			} 
 
@@ -97,14 +97,14 @@ public class SinglyLinkedList<E> {
 	public int indexOf(E obj) {
 		ListNode<E> next = head;
 		for (int i = 0; i < nodeCount; i++) {
-			if (next.getValue() == null) {
-				if (obj == null) {
-					return i;
-				} else {
+			if (next.getValue() == null || obj == null) {
+				if (obj != null || next.getValue() != null) {
 					next = next.getNext();
 					continue;
+				} else {
+					return i;
 				}
-			} 
+			}
 
 			if (next.getValue().equals(obj)) {
 				return i;

@@ -48,7 +48,7 @@ public class MyArrayList<E> {
 	// should be O(1)
 	public E get(int index) {
 		/* ---- YOUR CODE HERE ---- */
-		if (index < 0 || index >= size()) {
+		if (index < 0 || index >= internalArray.length) {
 			throw new IndexOutOfBoundsException();
 		}
 
@@ -78,6 +78,14 @@ public class MyArrayList<E> {
 	public boolean contains(E obj) {
 		/* ---- YOUR CODE HERE ---- */
 		for (int i = 0; i < internalArray.length; i++) {
+			if (internalArray[i] == null || obj == null) {
+				if (internalArray[i] != null || obj != null) {
+					continue;
+				} else {
+					return true;
+				}
+			}
+
 			if (internalArray[i].equals(obj)) {
 				return true;
 			}
