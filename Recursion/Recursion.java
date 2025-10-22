@@ -13,6 +13,9 @@ public class Recursion {
 
 		System.out.println("non consec: " + countNonConsecutiveSubsets(4));
 		System.out.println("ways to jump stairs: " + countWaysToJumpUpStairs(5));
+
+		String abc = "abc";
+		printSubsets(abc);
 	}
 
 	// Prints the value of every node in the singly linked list with the given head,
@@ -49,7 +52,7 @@ public class Recursion {
 			c = 0;
 		}
 
-		if (grid[r][c] == "infected" || grid[r][c] == "vaccinated") {
+		if (grid[r][c].equals("infected") || grid[r][c].equals("vaccinated")) {
 			return;
 		} else {
 			grid[r][c] = "infected";
@@ -103,12 +106,20 @@ public class Recursion {
 	// For example, subsets("abc") would print out "", "a", "b", "c", "ab", "ac",
 	// "bc", "abc"
 	// Order is your choice
-	public void findSubsets(String str) {
-
+	public static void findSubsets(String str) {
+		for (int i = 0; i < str.length(); i++) {
+			System.out.println(str.substring(0, i) + str.substring(i, str.length()));
+		}
 	}
 	
 	public static void printSubsets(String str) {
+		if (str.length() == 0) {
+			System.out.println("");
+			return;
+		}
 
+		findSubsets(str);
+		printSubsets(str.substring(0, str.length() - 1));
 	}
 
 	// List contains a single String to start.
