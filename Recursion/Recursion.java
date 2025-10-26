@@ -16,6 +16,7 @@ public class Recursion {
 
 		String abc = "abc";
 		printSubsets(abc);
+		printPermutations(abc);
 	}
 
 	// Prints the value of every node in the singly linked list with the given head,
@@ -106,20 +107,26 @@ public class Recursion {
 	// For example, subsets("abc") would print out "", "a", "b", "c", "ab", "ac",
 	// "bc", "abc"
 	// Order is your choice
-	public static void findSubsets(String str) {
-		for (int i = 0; i < str.length(); i++) {
-			System.out.println(str.substring(0, i) + str.substring(i, str.length()));
-		}
-	}
-	
-	public static void printSubsets(String str) {
-		if (str.length() == 0) {
-			System.out.println("");
+
+	// prints subsets of str, with two recursive cases: 
+	// either the character is included in the substring, or it isn't.
+	// String str - string you are printing subsets of
+	// int index - tracks the character the function is on
+	// String current - where the subset is saved
+	public static void findSubsets(String str, int index, String current) {
+		if (index == str.length()) {
+			System.out.println(current);
 			return;
 		}
 
-		findSubsets(str);
-		printSubsets(str.substring(0, str.length() - 1));
+		// ex: a, b, c etc. -> b, c etc. -> c -> ""
+		findSubsets(str, index + 1, current + str.charAt(index));
+		// a, b, no c -> b, no c -> no c
+		findSubsets(str, index + 1, current);
+	}
+	
+	public static void printSubsets(String str) {
+		findSubsets(str, 0, "");
 	}
 
 	// List contains a single String to start.
@@ -128,14 +135,33 @@ public class Recursion {
 	// For example, permute("abc") could print out "abc", "acb", "bac", "bca",
 	// "cab", "cba"
 	// Order is your choice
-	public static void printPermutations(String str) {
 
+	// prints permutations of a string by iterating over a pool of remaining characters, 
+	// removing a character, and using recursion until remaining characters hits 0 for every such character
+	// String str: the string holding the permutation
+	// String remaining: the as-of-yet unused characters
+	public static void findPermutations(String str, String remaining) {
+		if (remaining.length() == 0) {
+			System.out.println(str);
+			return;
+		}
+
+		for (int i = 0; i < remaining.length(); i++) {
+			char c = remaining.charAt(i);
+			String nextRemaining = remaining.substring(0, remaining.indexOf(c)) 
+				+ remaining.substring(remaining.indexOf(c) + 1);
+			findPermutations(str + c, nextRemaining);
+		}
+	}
+
+	public static void printPermutations(String str) {
+		findPermutations("", str);
 	}
 
 	// Performs a mergeSort on the given array of ints
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void mergeSort(int[] ints) {
-
+		
 	}
 
 	// Performs a quickSort on the given array of ints
@@ -175,7 +201,7 @@ public class Recursion {
 	// time 9
 	// for a total of 20 points, so it would return 20.
 	public static int scavHunt(int[] times, int[] points) {
-
+		return 0;
 	}
 
 }
