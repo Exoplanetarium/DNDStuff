@@ -17,6 +17,8 @@ public class Recursion {
 		String abc = "abc";
 		printSubsets(abc);
 		printPermutations(abc);
+		int[] sorted = {11, 5, 8, 3, 10, 2};
+		mergeSort(sorted);
 	}
 
 	// Prints the value of every node in the singly linked list with the given head,
@@ -160,15 +162,86 @@ public class Recursion {
 
 	// Performs a mergeSort on the given array of ints
 	// Precondition: you may assume there are NO duplicates!!!
-	public static void mergeSort(int[] ints) {
+	public static void split(int[] ints) {
 		
+	}
+
+	public static void mergeSort(int[] ints) {
+		if (ints.length == 2) {
+			if (ints[0] > ints[1]) {
+				int temp = ints[0];
+				ints[0] = ints[1];
+				ints[1] = temp;
+			}
+
+			return;
+		} else if (ints.length == 1) {
+			return;
+		}
+
+		int[] lower = new int[ints.length / 2];
+		int[] upper = new int[ints.length - lower.length];
+		for (int i = 0; i < ints.length; i++) {
+			if (i < ints.length / 2) {
+				lower[i] = ints[i];
+			} else {
+				upper[i - ints.length / 2] = ints[i];
+			}
+		}
+
+		mergeSort(lower);
+		mergeSort(upper);
+
+		int j1 = 0;
+		int j2 = 0;
+		for (int i = 0; i < ints.length; i++) {
+			if (j1 >= lower.length && j2 >= upper.length) {
+				return;
+			} else if (j1 >= lower.length) {
+				ints[i] = upper[j2];
+				j2++;
+			} else if (j2 >= upper.length) {
+				ints[i] = lower[j1];
+				j1++;
+			} else {
+				if (lower[j1] < upper[j2]) {
+					ints[i] = lower[j1];
+					j1++;
+				} else {
+					ints[i] = upper[j2];
+					j2++;
+				}
+			}
+		}
 	}
 
 	// Performs a quickSort on the given array of ints
 	// Use the middle element (index n/2) as the pivot
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void quickSort(int[] ints) {
+		if (ints.length == 1) {
+			return;
+		}
 
+		int pivot = ints[ints.length / 2];
+		int[] lower = new int[ints.length / 2];
+		int[] upper = new int[ints.length - lower.length];
+		int j1 = 0;
+		int j2 = 0;
+		for (int i = 0; i < ints.length; i++) {
+			if (ints[i] < pivot) {
+				lower[j1] = ints[i];
+				j1++;
+			} else if (ints[i] > pivot) {
+				upper[j2] = ints[i];
+				j2++;
+			}
+		}
+
+		quickSort(lower);
+		quickSort(upper);
+
+		  
 	}
 
 	// Prints a sequence of moves (one on each line)
