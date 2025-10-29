@@ -11,7 +11,7 @@ public class Recursion {
 		String[][] grid = {{"alive", "alive", "alive", "vaccinated"}, {"alive", "vaccinated", "alive", "alive"}};
 		infect(grid, 1, 2);
 
-		System.out.println("non consec: " + countNonConsecutiveSubsets(4));
+		System.out.println("non consec: " + countNonConsecutiveSubsets(5));
 		System.out.println("ways to jump stairs: " + countWaysToJumpUpStairs(5));
 
 		String abc = "abc";
@@ -77,9 +77,9 @@ public class Recursion {
 	public static long countNonConsecutiveSubsets(int n) {
 		if (n <= 2) {
 			return n + 1; 
-		}
+		} 
 		
-		long num = n - 1 + countNonConsecutiveSubsets(n - 1);
+		long num = countNonConsecutiveSubsets(n - 1) + countNonConsecutiveSubsets(n - 2);
 
 		return num;
 	}
