@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Recursion {
 	public static void main(String[] args) {
 		ListNode head = new ListNode("Hi");
@@ -19,6 +21,8 @@ public class Recursion {
 		printPermutations(abc);
 		int[] sorted = {11, 5, 8, 3, 10, 2};
 		mergeSort(sorted);
+		int[] sorted2 = {4, 12, 8};
+		quickSort(sorted2);
 	}
 
 	// Prints the value of every node in the singly linked list with the given head,
@@ -89,11 +93,15 @@ public class Recursion {
 	// Jumping 1-1-2 is considered different than jumping 1-2-1
 	// Precondition: n > 0
 	public static long countWaysToJumpUpStairs(int n) {
-		if (n <= 3) {
+		if (n == 0) {
+			return 1;
+		}
+
+		if (n < 3) {
 			return n;
 		}
 
-		long num = 1 + countWaysToJumpUpStairs(n - 1) + countWaysToJumpUpStairs(n - 2) + countWaysToJumpUpStairs(n - 3);
+		long num = countWaysToJumpUpStairs(n - 1) + countWaysToJumpUpStairs(n - 2) + countWaysToJumpUpStairs(n - 3);
 		return num;
 	}
 
@@ -162,10 +170,6 @@ public class Recursion {
 
 	// Performs a mergeSort on the given array of ints
 	// Precondition: you may assume there are NO duplicates!!!
-	public static void split(int[] ints) {
-		
-	}
-
 	public static void mergeSort(int[] ints) {
 		if (ints.length == 2) {
 			if (ints[0] > ints[1]) {
@@ -219,29 +223,25 @@ public class Recursion {
 	// Use the middle element (index n/2) as the pivot
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void quickSort(int[] ints) {
-		if (ints.length == 1) {
+		ArrayList<Integer> intsList = new ArrayList<Integer>();
+		for (int i = 0; i < ints.length; i++) {
+			intsList.add(ints[i]);
+		}
+
+		if (intsList.size() <= 1) {
 			return;
 		}
 
-		int pivot = ints[ints.length / 2];
-		int[] lower = new int[ints.length / 2];
-		int[] upper = new int[ints.length - lower.length];
-		int j1 = 0;
-		int j2 = 0;
+		int pivot = intsList.get(intsList.size() / 2);
+		ArrayList<Integer> lower = new ArrayList<>();
+		ArrayList<Integer> upper = new ArrayList<>();		
 		for (int i = 0; i < ints.length; i++) {
 			if (ints[i] < pivot) {
-				lower[j1] = ints[i];
-				j1++;
+				lower.add(ints[i]);
 			} else if (ints[i] > pivot) {
-				upper[j2] = ints[i];
-				j2++;
+				upper.add(ints[i]);
 			}
 		}
-
-		quickSort(lower);
-		quickSort(upper);
-
-		  
 	}
 
 	// Prints a sequence of moves (one on each line)
