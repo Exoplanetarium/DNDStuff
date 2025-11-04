@@ -21,8 +21,10 @@ public class Recursion {
 		printPermutations(abc);
 		int[] sorted = {11, 5, 8, 3, 10, 2};
 		mergeSort(sorted);
-		int[] sorted2 = {4, 12, 8};
+		int[] sorted2 = {4, 12, 8, 0, 3, 1};
 		quickSort(sorted2);
+
+		solveHanoi(3);
 	}
 
 	// Prints the value of every node in the singly linked list with the given head,
@@ -222,12 +224,7 @@ public class Recursion {
 	// Performs a quickSort on the given array of ints
 	// Use the middle element (index n/2) as the pivot
 	// Precondition: you may assume there are NO duplicates!!!
-	public static void quickSort(int[] ints) {
-		ArrayList<Integer> intsList = new ArrayList<Integer>();
-		for (int i = 0; i < ints.length; i++) {
-			intsList.add(ints[i]);
-		}
-
+	public static void quickSortArrayLists(ArrayList<Integer> intsList) {
 		if (intsList.size() <= 1) {
 			return;
 		}
@@ -235,12 +232,38 @@ public class Recursion {
 		int pivot = intsList.get(intsList.size() / 2);
 		ArrayList<Integer> lower = new ArrayList<>();
 		ArrayList<Integer> upper = new ArrayList<>();		
-		for (int i = 0; i < ints.length; i++) {
-			if (ints[i] < pivot) {
-				lower.add(ints[i]);
-			} else if (ints[i] > pivot) {
-				upper.add(ints[i]);
+		for (int i = 0; i < intsList.size(); i++) {
+			if (intsList.get(i) < pivot) {
+				lower.add(intsList.get(i));
+			} else if (intsList.get(i) > pivot) {
+				upper.add(intsList.get(i));
 			}
+		}
+
+		quickSortArrayLists(lower);
+		quickSortArrayLists(upper);
+
+		for (int i = 0; i < intsList.size(); i++) {
+			if (i < lower.size()) {
+				intsList.set(i, lower.get(i));
+			} else if (i == lower.size()) {
+				intsList.set(i, pivot);
+			} else {
+				intsList.set(i, upper.get(i - (lower.size() + 1)));
+			}
+		}
+	}
+
+	public static void quickSort(int[] ints) {
+		ArrayList<Integer> intsList = new ArrayList<Integer>();
+		for (int i = 0; i < ints.length; i++) {
+			intsList.add(ints[i]);
+		}
+
+		quickSortArrayLists(intsList);
+
+		for (int i = 0; i < ints.length; i++) {
+			ints[i] = intsList.get(i);
 		}
 	}
 
@@ -250,8 +273,18 @@ public class Recursion {
 	// The towers are number 0, 1, 2, and each move should be of
 	// the form "1 -> 2", meaning "take the top disk of tower 1 and
 	// put it on tower 2" etc.
-	public static void solveHanoi(int startingDisks) {
+	public static void printHanoi(int startingDisks, int start, int end, int helper) {
+		if (startingDisks == 0) {
+			return;
+		}
 
+		printHanoi(startingDisks - 1, start, helper, end);
+		System.out.println(start + " -> " + end);
+		printHanoi(startingDisks - 1, helper, end, start);
+	}
+
+	public static void solveHanoi(int startingDisks) {		
+		printHanoi(startingDisks, 0, 2, 1);
 	}
 
 	// You are partaking in a scavenger hunt!
