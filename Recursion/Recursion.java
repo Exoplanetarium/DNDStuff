@@ -25,6 +25,9 @@ public class Recursion {
 		quickSort(sorted2);
 
 		solveHanoi(3);
+		int[] times = {3, 7, 9};
+		int[] points = {10, 15, 10};
+		System.out.println("Best reward: " + scavHunt(times, points));
 	}
 
 	// Prints the value of every node in the singly linked list with the given head,
@@ -37,7 +40,11 @@ public class Recursion {
 		
 		Object value = head.getValue();
 		printListInReverse(head.getNext());
-		System.out.println(value);
+		if (value == null) {
+			System.out.println("null");
+		} else {
+			System.out.println(value);
+		}
 	}
 
 	// For the given 2D array of Strings, replaces the String at index[r][c]
@@ -125,7 +132,8 @@ public class Recursion {
 	// String str - string you are printing subsets of
 	// int index - tracks the character the function is on
 	// String current - where the subset is saved
-	public static void findSubsets(String str, int index, String current) {
+	// returns void
+	public static void findSubsets(String str, int index, String current) { 
 		if (index == str.length()) {
 			System.out.println(current);
 			return;
@@ -138,6 +146,10 @@ public class Recursion {
 	}
 	
 	public static void printSubsets(String str) {
+		if (str == null) {
+			throw new IllegalArgumentException();
+		}
+
 		findSubsets(str, 0, "");
 	}
 
@@ -152,6 +164,7 @@ public class Recursion {
 	// removing a character, and using recursion until remaining characters hits 0 for every such character
 	// String str: the string holding the permutation
 	// String remaining: the as-of-yet unused characters
+	// returns void
 	public static void findPermutations(String str, String remaining) {
 		if (remaining.length() == 0) {
 			System.out.println(str);
@@ -167,6 +180,10 @@ public class Recursion {
 	}
 
 	public static void printPermutations(String str) {
+		if (str == null) {
+			throw new IllegalArgumentException();
+		}
+
 		findPermutations("", str);
 	}
 
@@ -181,7 +198,7 @@ public class Recursion {
 			}
 
 			return;
-		} else if (ints.length == 1) {
+		} else if (ints.length <= 1) {
 			return;
 		}
 
@@ -224,6 +241,10 @@ public class Recursion {
 	// Performs a quickSort on the given array of ints
 	// Use the middle element (index n/2) as the pivot
 	// Precondition: you may assume there are NO duplicates!!!
+
+	// does quick sort on an ArrayList
+	// ArrayList<Integer> intsList: the list to sort
+	// returns sorted intsList
 	public static void quickSortArrayLists(ArrayList<Integer> intsList) {
 		if (intsList.size() <= 1) {
 			return;
@@ -273,6 +294,13 @@ public class Recursion {
 	// The towers are number 0, 1, 2, and each move should be of
 	// the form "1 -> 2", meaning "take the top disk of tower 1 and
 	// put it on tower 2" etc.
+
+	// prints the steps to solve a hanoi tower
+	// int startingDisks: number of disks in the tower
+	// int start: where the disks start
+	// int end: where you want the stack to go
+	// int helper: the other pole
+	// returns void
 	public static void printHanoi(int startingDisks, int start, int end, int helper) {
 		if (startingDisks == 0) {
 			return;
@@ -284,6 +312,10 @@ public class Recursion {
 	}
 
 	public static void solveHanoi(int startingDisks) {		
+		if (startingDisks < 0) {
+			throw new IllegalArgumentException();
+		}
+
 		printHanoi(startingDisks, 0, 2, 1);
 	}
 
@@ -306,8 +338,38 @@ public class Recursion {
 	// Then the best possible result is getting the item at time 3 and the one at
 	// time 9
 	// for a total of 20 points, so it would return 20.
+
+	// finds the max reward for the scavenger hunt
+	// int[] times: the list of times
+	// int[] points: the list of points at those times
+	// int currIndex: the current index we are checking the optimality of
+	// returns the maximum reward at a certain index
+	public static int maxReward(int[] times, int[] points, int currIndex) {
+		if (currIndex == times.length - 1) {
+			return points[currIndex];
+		}
+
+		int nextIndex = currIndex;
+		while (times[nextIndex] < 5 + times[currIndex]) {
+			nextIndex++;
+
+			if (nextIndex == times.length - 1) {
+				break;
+			}
+		}
+
+		if (times[nextIndex] < 5 + times[currIndex]) {
+			return points[currIndex];
+		}
+
+		int with = points[currIndex] + maxReward(times, points, nextIndex);
+		int without = maxReward(times, points, currIndex + 1);
+
+		return (with > without ? with : without);
+	}
+
 	public static int scavHunt(int[] times, int[] points) {
-		return 0;
+		return maxReward(times, points, 0);
 	}
 
 }
