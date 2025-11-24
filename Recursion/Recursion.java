@@ -189,7 +189,11 @@ public class Recursion {
 
 	// Performs a mergeSort on the given array of ints
 	// Precondition: you may assume there are NO duplicates!!!
-	public static void mergeSort(int[] ints) {
+	
+	// does merge sort on an int array
+	// int[] ints: the to-be-sorted integer array
+	// returns int[] as the sorted array
+	public static int[] merge(int[] ints) {
 		if (ints.length == 2) {
 			if (ints[0] > ints[1]) {
 				int temp = ints[0];
@@ -197,9 +201,9 @@ public class Recursion {
 				ints[1] = temp;
 			}
 
-			return;
+			return ints;
 		} else if (ints.length <= 1) {
-			return;
+			return ints;
 		}
 
 		int[] lower = new int[ints.length / 2];
@@ -219,7 +223,7 @@ public class Recursion {
 		int j2 = 0;
 		for (int i = 0; i < ints.length; i++) {
 			if (j1 >= lower.length && j2 >= upper.length) {
-				return;
+				return ints;
 			} else if (j1 >= lower.length) {
 				ints[i] = upper[j2];
 				j2++;
@@ -235,6 +239,14 @@ public class Recursion {
 					j2++;
 				}
 			}
+		}
+
+		return ints;
+	}
+	public static void mergeSort(int[] ints) {
+		int[] sorted = merge(ints);
+		for (int i = 0; i < ints.length; i++) {
+			ints[i] = sorted[i];
 		}
 	}
 
