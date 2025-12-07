@@ -48,7 +48,11 @@ public class Navigator {
      */
     private void cd(String[] args) {
         String path = args[0];
+        if (path == null) {
+            throw new IllegalArgumentException();
+        }
 
+        FolderNode root = fileSystem.getRoot();
         if (path.equals(".")) {
             return;
         }
@@ -62,7 +66,16 @@ public class Navigator {
             return;
         }
 
-        
+        String[] nodes = path.split("/");
+        if (path.startsWith("/")) {
+            for (String node : nodes) {
+                currentDirectory = (FolderNode) root.getChildByName(node);
+            }
+        }
+
+        for (String node : nodes) {
+            currentDirectory = (FolderNode) currentDirectory.getChildByName(node);
+        }
     }
 
     /**
@@ -70,21 +83,31 @@ public class Navigator {
      * Output formatting can mirror typical file system listings.
      */
     private void ls(String[] args) {
-        // TODO: print names of all child nodes of currentDirectory
+        for (FileSystemNode child : currentDirectory.getChildren()) {
+            System.out.println(child.getName());
+        }
     }
 
     /**
      * Creates a new directory inside the current directory using the provided name.
      */
     private void mkdir(String[] args) {
-        // TODO: read folder name from args and delegate to currentDirectory.addFolder(...)
+        String folderName = args[0];
+
+        if (folderName == null) {
+            throw new IllegalArgumentException();
+        }
+
+        currentDirectory.addFolder(folderName);
     }
 
     /**
      * Creates a new file inside the current directory with a given name and size.
      */
     private void touch(String[] args) {
+        
         // TODO: read file name and size from args and delegate to currentDirectory.addFile(...)
+
     }
 
     /**
