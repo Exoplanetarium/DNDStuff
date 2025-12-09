@@ -52,29 +52,23 @@ public class Navigator {
             throw new IllegalArgumentException();
         }
 
-        FolderNode root = fileSystem.getRoot();
-        if (path.equals(".")) {
-            return;
-        }
-        
-        if (path.equals("..")) {
-            if (path.equals("/")) {
-                return;
-            }
-
-            currentDirectory = currentDirectory.getParent();
-            return;
-        }
-
         String[] nodes = path.split("/");
         if (path.startsWith("/")) {
-            for (String node : nodes) {
-                currentDirectory = (FolderNode) root.getChildByName(node);
-            }
+            currentDirectory = fileSystem.getRoot();
         }
 
         for (String node : nodes) {
+            if (node.equals(".")) {
+                continue;
+            }
+
+            if (node.equals("..")) {
+                currentDirectory = (FolderNode) currentDirectory.getParent();
+                continue;
+            }
+
             currentDirectory = (FolderNode) currentDirectory.getChildByName(node);
+            
         }
     }
 
@@ -84,7 +78,11 @@ public class Navigator {
      */
     private void ls(String[] args) {
         for (FileSystemNode child : currentDirectory.getChildren()) {
-            System.out.println(child.getName());
+            if (child.isFolder()) {
+                System.out.println(child.getName() + "/");
+            } else {
+                System.out.println(child.getName());
+            }
         }
     }
 
@@ -105,8 +103,14 @@ public class Navigator {
      * Creates a new file inside the current directory with a given name and size.
      */
     private void touch(String[] args) {
+        String fileName = args[0];
+        int size = Integer.parseInt(args[1]);
         
-        // TODO: read file name and size from args and delegate to currentDirectory.addFile(...)
+        if (fileName == null) {
+            throw new IllegalArgumentException();
+        }
+
+        currentDirectory.addFile(fileName, size);
 
     }
 
@@ -115,14 +119,27 @@ public class Navigator {
      * and prints their paths.
      */
     private void find(String[] args) {
-        // TODO: use recursive search starting at currentDirectory
+        String fileName = args[0];
+        findHelper(fileName, currentDirectory);
+    }
+
+    private void findHelper(String fileName, FolderNode directory) {
+        for (FileSystemNode child : directory.getChildren()) {
+            if (child.getName().equals(fileName)) {
+                System.out.println(child.toString());
+            }
+
+            if (child.isFolder()) {
+                findHelper(fileName, (FolderNode) child);
+            }
+        }
     }
 
     /**
      * Prints the absolute path of the current directory, from the root to this node.
      */
     private void pwd(String[] args) {
-        // TODO: use currentDirectory.toString() or similar path builder
+        System.out.println(currentDirectory.toString());
     }
 
     /**
@@ -130,7 +147,34 @@ public class Navigator {
      * respecting flags or depth limits if provided by the arguments.
      */
     private void tree(String[] args) {
-        // TODO: implement tree-style printing with indentation and branch characters
+        treeHelper(currentDirectory, 1);
+    }
+
+    private void treeHelper(FolderNode directory, int depth) {
+        for (int i = 0; i < directory.getChildren().size(); i++) {
+            StringBuilder branchLines = new StringBuilder();
+            for (int j = 0; j < depth; j++) {
+                if (j == depth - 1) {
+                    if (i == directory.getChildren().size() - 1) {
+                        branchLines.append("|---");
+                    } else {
+                        branchLines.append("|---");
+                    }
+                    break;
+                }
+
+                if (j == 0) {
+                    branchLines.append("|   ");
+                }
+            }
+
+            System.out.print(branchLines);
+            
+            System.out.println(directory.getChildren().get(i).getName());
+            if (directory.getChildren().get(i).isFolder()) {
+                treeHelper((FolderNode) directory.getChildren().get(i), depth + 1);
+            }
+        }
     }
 
     /**
@@ -138,14 +182,14 @@ public class Navigator {
      * and all of its subdirectories.
      */
     private void count(String[] args) {
-        // TODO: call a counting method on currentDirectory
+        System.out.println(currentDirectory.getTotalNodeCount());
     }
 
     /**
      * Prints the total size of all files reachable from the current directory.
      */
     private void size(String[] args) {
-        // TODO: call a size-calculation method on currentDirectory
+        System.out.println(currentDirectory.getSize());
     }
 
     /**
@@ -153,7 +197,7 @@ public class Navigator {
      * from the root directory down to this directory.
      */
     private void depth(String[] args) {
-        // TODO: use a depth method on currentDirectory
+        System.out.println(currentDirectory.getDepth());
     }
 
     /**
@@ -162,7 +206,7 @@ public class Navigator {
      * An empty directory has value 0.
      */
     private void height(String[] args) {
-        // TODO: use a height method on currentDirectory
+        System.out.println(currentDirectory.getHeight());
     }
 
     /**

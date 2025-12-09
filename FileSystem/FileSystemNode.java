@@ -41,7 +41,7 @@ public abstract class FileSystemNode {
         int count = 0;
         FileSystemNode current = this;
         while (current.getParent() != null) {
-            current = this.getParent();
+            current = current.getParent();
             count++;
         }
 
@@ -73,16 +73,14 @@ public abstract class FileSystemNode {
      */
     @Override
     public String toString() {
-        StringBuilder str = new StringBuilder();
+        StringBuilder str = new StringBuilder("/");
         FileSystemNode current = this;
         while (current.getParent() != null) {
-            str.insert(0, current.getName() + "/");
-            current = this.getParent();
+            str.insert(0, "/" + current.getName());
+            current = current.getParent();
         }
 
-        str.insert(0, "root/");
-
-        if (!this.isFolder()) {
+        if (this.getParent() != null) {
             str.delete(str.length() - 1, str.length());
         }
         

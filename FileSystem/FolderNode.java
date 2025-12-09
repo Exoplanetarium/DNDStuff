@@ -52,7 +52,7 @@ public class FolderNode extends FileSystemNode {
      */
     public boolean addFile(String fileName, int size) {
         if (getChildByName(fileName) == null) {
-            FileNode newFile = new FileNode(this, fileName, size);
+            FileNode newFile = new FileNode(fileName, this, size);
             children.add(newFile);
             return true;
         }
@@ -80,16 +80,17 @@ public class FolderNode extends FileSystemNode {
      * When a match is found, its full path can be printed by the caller using toString().
      */
     public boolean containsNameRecursive(String searchName) {
-        for (FileSystemNode child : children) {
-            if (child.isFolder()) {
-                containsNameRecursive(child.getName());
-            }
+        return containsNameRecursiveHelper(searchName, this);
+    }
 
-            if (child.equals(null) && searchName == null) {
-                return true;
-            }
+    public boolean containsNameRecursiveHelper(String searchName, FolderNode current) {
+        for (FileSystemNode child : current.getChildren()) {
             if (child.getName().equals(searchName)) {
                 return true;
+            }
+
+            if (child.isFolder()) {
+                containsNameRecursiveHelper(searchName, (FolderNode) child);
             }
         }
 
@@ -101,16 +102,17 @@ public class FolderNode extends FileSystemNode {
         return getHeightHelper(this);
     }
 
-    public int getHeightHelper(FileSystemNode current) {
+    public int getHeightHelper(FolderNode current) {
         if (!current.isFolder()) {
-            return 0;
+            return 1;
         }
 
-        int maxCount = 0;
-        for (FileSystemNode child : children) {
-            int count = 0;
+        int maxCount = 1;
+        for (FileSystemNode child : current.getChildren()) {
+            int count = 1;
+
             if (child.isFolder()) {
-                count += getHeightHelper(child);
+                count += getHeightHelper((FolderNode) child);
             }
 
             if (count > maxCount) {
@@ -126,15 +128,17 @@ public class FolderNode extends FileSystemNode {
         return getSizeHelper(this);
     }
 
-    public int getSizeHelper(FileSystemNode current) {
+    public int getSizeHelper(FolderNode current) {
         if (!current.isFolder()) {
             return current.getSize();
         }
 
         int size = 0;
-        for (FileSystemNode child : children) {
+        for (FileSystemNode child : current.getChildren()) {
             if (child.isFolder()) {
-                size += getSizeHelper(child);
+                size += getSizeHelper((FolderNode) child);
+            } else {
+                size += child.getSize();
             }
 
         }
@@ -144,20 +148,21 @@ public class FolderNode extends FileSystemNode {
 
     @Override
     public int getTotalNodeCount() {
-        return getTotalNodeCountHelper(this);
+        // +1 for the this directory 
+        return getTotalNodeCountHelper(this) + 1;
     }
 
-    public int getTotalNodeCountHelper(FileSystemNode current) {
+    public int getTotalNodeCountHelper(FolderNode current) {
         if (!current.isFolder()) {
             return 1;
         }
 
         int nodeCount = 0;
-        for (FileSystemNode child : children) {
+        for (FileSystemNode child : current.getChildren()) {
+            nodeCount++;
             if (child.isFolder()) {
-                nodeCount += getSizeHelper(child);
+                nodeCount += getTotalNodeCountHelper((FolderNode) child);
             }
-
         }
 
         return nodeCount;

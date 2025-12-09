@@ -38,9 +38,24 @@ public class FileSystemTester {
         boolean addedMainJava = root.addFile("main.java", 120);
         boolean addedReadme = root.addFile("README.md", 80);
 
-        int depthRoot = root.getDepth();
-        int heightRoot = root.getHeight();
-        int sizeRoot = root.getSize();
-        int totalNodesRoot = root.getTotalNodeCount();
+
+
+        Navigator navigator = new Navigator(tree);
+        navigator.processUserInputString("ls");
+        navigator.processUserInputString("mkdir testFolder");
+        navigator.processUserInputString("cd testFolder");
+        navigator.processUserInputString("touch test.txt 100");
+        navigator.processUserInputString("touch test2.txt 180");
+        navigator.processUserInputString("cd ..");
+        navigator.processUserInputString("tree");
+        navigator.processUserInputString("find testFolder");
+
+        System.out.println("depth: " + root.getDepth());
+        System.out.println("height: " + root.getHeight());
+        System.out.println("size: " + root.getSize());
+        System.out.println("total node count: " + root.getTotalNodeCount());
+        boolean containsName = root.containsNameRecursive("test.txt");
+        System.out.println(root.toString());
+
     }
 }
