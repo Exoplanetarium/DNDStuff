@@ -160,12 +160,13 @@ public class Navigator {
                     } else {
                         branchLines.append("|---");
                     }
-                    break;
+                } else if (j == 0) {
+                    branchLines.append("|    ");
+                } else {
+                    branchLines.append("    ");
                 }
 
-                if (j == 0) {
-                    branchLines.append("|   ");
-                }
+
             }
 
             System.out.print(branchLines);
@@ -182,7 +183,7 @@ public class Navigator {
      * and all of its subdirectories.
      */
     private void count(String[] args) {
-        System.out.println(currentDirectory.getTotalNodeCount());
+        System.out.println(currentDirectory.getTotalNodeCount() - 1);
     }
 
     /**
