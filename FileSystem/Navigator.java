@@ -58,13 +58,24 @@ public class Navigator {
         }
 
         for (String node : nodes) {
+            if (node == null) {
+                return;
+            }
+
             if (node.equals(".")) {
                 continue;
             }
 
             if (node.equals("..")) {
-                currentDirectory = (FolderNode) currentDirectory.getParent();
+                if (currentDirectory.getParent() != null) {
+                    currentDirectory = (FolderNode) currentDirectory.getParent();
+                }
+                
                 continue;
+            }
+
+            if (!currentDirectory.getChildByName(node).isFolder()) {
+                return;
             }
 
             currentDirectory = (FolderNode) currentDirectory.getChildByName(node);
@@ -161,7 +172,7 @@ public class Navigator {
                         branchLines.append("|---");
                     }
                 } else if (j == 0) {
-                    branchLines.append("|    ");
+                    branchLines.append("|   ");
                 } else {
                     branchLines.append("    ");
                 }
