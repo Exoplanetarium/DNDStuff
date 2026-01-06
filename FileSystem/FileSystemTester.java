@@ -46,7 +46,11 @@ public class FileSystemTester {
         navigator.processUserInputString("cd testFolder");
         navigator.processUserInputString("touch test.txt 100");
         navigator.processUserInputString("touch test2.txt 180");
-        navigator.processUserInputString("cd ..");
+        navigator.processUserInputString("mkdir secondFolder");
+        navigator.processUserInputString("cd secondFolder");
+        navigator.processUserInputString("touch test3.txt 20");
+        navigator.processUserInputString("touch test4.txt 30");
+        navigator.processUserInputString("cd ../..");
         navigator.processUserInputString("tree");
         navigator.processUserInputString("find testFolder");
 

@@ -20,6 +20,8 @@ public class SortedArrayList<E extends Comparable<E>> extends MyArrayList<E>{
 
 		System.out.println("min: " + arr.min().toString());
 		System.out.println("max: " + arr.max().toString());
+
+		System.out.println(arr.toString());
 	}
 	
 	@Override
@@ -85,40 +87,10 @@ public class SortedArrayList<E extends Comparable<E>> extends MyArrayList<E>{
 	}
 	
 	public E min() {
-		E minObject = null;
-		for (int i = 0; i < size(); i++) {
-			if (this.get(i) == null) {
-				continue;
-			}
-
-			if (i == 0) {
-				minObject = this.get(i);
-			}
-
-			if (this.get(i).compareTo(minObject) < 0) {
-				minObject = this.get(i);
-			}
-		}
-
-		return minObject;
+		return this.get(0);
 	}
 	
 	public E max() {
-		E maxObject = null;
-		for (int i = 0; i < size(); i++) {
-			if (this.get(i) == null) {
-				continue;
-			}
-
-			if (i == 0) {
-				maxObject = this.get(i);
-			}
-
-			if (this.get(i).compareTo(maxObject) > 0) {
-				maxObject = this.get(i);
-			}
-		}
-
-		return maxObject;
+		return this.get(this.size() - 1);
 	}
 }
