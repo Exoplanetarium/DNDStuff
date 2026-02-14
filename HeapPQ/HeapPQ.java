@@ -3,20 +3,24 @@ public class HeapPQ<E extends Comparable<E>> implements MyPriorityQueue<E> {
 
 	public static void main(String[] args) {
 		HeapPQ<Integer> heap = new HeapPQ<>();
-		heap.add(25);
-		heap.add(24);
-		heap.add(4);
-		heap.add(3);
-		heap.add(20);
+		heap.add(10);
+		heap.add(6);
+		heap.add(11);
+		heap.add(8);
+		heap.add(9);
 		heap.add(5);
-		heap.add(4);
+		heap.add(7);
 		System.out.println(heap.toString());
 		heap.removeMin();
 		System.out.println(heap.toString());
 		System.out.println(heap.isEmpty());
 		heap.removeMin();
+		System.out.println(heap.toString());
 		heap.removeMin();
+		System.out.println(heap.toString());
 		heap.removeMin();
+		System.out.println(heap.toString());
+
 		heap.removeMin();
 		heap.removeMin();
 		heap.removeMin();
@@ -93,7 +97,20 @@ public class HeapPQ<E extends Comparable<E>> implements MyPriorityQueue<E> {
 	//Returns the index of the *smaller child* of index i
 	private int smallerChild(int i)
 	{
-		return (i + 1) * 2 - 1;
+		int candidate1 = (i + 1) * 2 - 1;
+		int candidate2 = (i + 1) * 2;
+		if ((candidate1 < 0 || candidate1 >= objectCount) 
+			&& (candidate2 < 0 || candidate2 >= objectCount)) {
+			return objectCount + 1;
+		} else if (candidate1 < 0 || candidate1 >= objectCount) {
+			return candidate2;
+		} else if (candidate2 < 0 || candidate2 >= objectCount) {
+			return candidate1;
+		} else if (heap[candidate1].compareTo(heap[candidate2]) < 0) {
+			return candidate1;
+		} 
+		
+		return candidate2;
 	}
 
 	//Swaps the contents of indices i and j
@@ -114,9 +131,9 @@ public class HeapPQ<E extends Comparable<E>> implements MyPriorityQueue<E> {
 		if (parent(i) < 0) {
 			return;
 		}
-
-		if (heap[parent(i)].compareTo(heap[i]) < 0) {
-			swap(i, parent(i));
+		
+		if (heap[parent(i)].compareTo(heap[i]) > 0) {
+			swap(parent(i), i);
 			bubbleUp(parent(i));
 		}
 	}
@@ -127,17 +144,18 @@ public class HeapPQ<E extends Comparable<E>> implements MyPriorityQueue<E> {
 		if (smallerChild(i) >= objectCount) {
 			return;
 		}
-
-		if (heap[smallerChild(i)].compareTo(heap[i]) > 0) {
+		
+		if (heap[smallerChild(i)].compareTo(heap[i]) < 0) {
 			swap(i, smallerChild(i));
-			bubbleDown(i);
-		} else if (heap[smallerChild(i) + 1].compareTo(heap[i]) > 0) {
-			swap(i, smallerChild(i) + 1);
-			bubbleDown(smallerChild(i) + 1);
+			bubbleDown(smallerChild(i));
 		}
 	}
 
 	public E peek() {
+		if (objectCount == 0) {
+			return null;
+		}
+
 		return heap[0];
 	}
 
@@ -156,18 +174,23 @@ public class HeapPQ<E extends Comparable<E>> implements MyPriorityQueue<E> {
 
 		E removed = heap[0];
 		heap[0] = heap[objectCount - 1];
-		bubbleDown(0);
 		objectCount--;
+		bubbleDown(0);
 		return removed;
 	}
 
 	public void add(E obj) {
+		if (obj == null) {
+			throw new IllegalArgumentException();
+		}
+
 		if (objectCount == heap.length) {
 			increaseCapacity();
 		}
 
 		heap[objectCount] = obj;
 		objectCount++;
+		bubbleUp(objectCount - 1);
 	}
 
 }
