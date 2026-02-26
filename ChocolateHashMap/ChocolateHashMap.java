@@ -50,13 +50,13 @@ public class ChocolateHashMap<K, V> {
     // Use .hashCode(), but be aware that hashCode can return negative numbers!
     // NOTE: Math.abs(Integer.MIN_VALUE) is still negative. Consider masking the sign bit.
     private int whichBucket(K key) {
-        int index = key.hashCode();
+        long index = key.hashCode();
         if (index < 0) {
             long longIndex = index;
-            index = (int) -longIndex;
+            index = -longIndex;
         }
 
-        return index % buckets.length;
+        return (int) (index % buckets.length);
     }
 
     // Returns the current load factor (objCount / buckets)
